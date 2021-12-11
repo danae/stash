@@ -1,9 +1,8 @@
 const express = require('express');
 const httpError = require('http-errors');
-const passport = require('passport');
 const validate = require('validate.js');
 
-const wrapErrors = require('../utils/wrapErrors');
+const requestUtils = require('../utils/requestUtils');
 
 const User = require('../models/user');
 
@@ -31,7 +30,7 @@ module.exports = function(app) {
 
   // Create the routes
   router.post('/',
-    wrapErrors(async function(req, res, next) {
+    requestUtils.wrap(async function(req, res, next) {
       // Validate the data
       const validator = {
         email: {presence: true, type: 'string', email: true},
@@ -66,28 +65,28 @@ module.exports = function(app) {
     }));
 
   router.get('/',
-    wrapErrors(async function(req, res, next) {
+    requestUtils.wrap(async function(req, res, next) {
       // Get the users from the database and respond with the users
       const users = await User.find();
       return res.json(users);
     }));
 
   router.get('/me',
-    passport.authenticate('jwt', {session: false, assignProperty: 'authUser'}),
-    wrapErrors(async function(req, res, next) {
+    requestUtils.authenticate('jwt'),
+    requestUtils.wrap(async function(req, res, next) {
       // Respond with the current user
       return res.json(req.authUser);
     }));
 
   router.get('/:id',
-    wrapErrors(async function(req, res, next) {
+    requestUtils.wrap(async function(req, res, next) {
       // Respond with the user
       return res.json(req.user);
     }));
 
   router.patch('/me',
-    passport.authenticate('jwt', {session: false, assignProperty: 'authUser'}),
-    wrapErrors(async function(req, res, next) {
+    requestUtils.authenticate('jwt'),
+    requestUtils.wrap(async function(req, res, next) {
       // Validate the data
       const validator = {
         email: {type: 'string', email: true},
@@ -128,8 +127,8 @@ module.exports = function(app) {
     }));
 
   router.delete('/me',
-    passport.authenticate('jwt', {session: false, assignProperty: 'authUser'}),
-    wrapErrors(async function(req, res, next) {
+    requestUtils.authenticate('jwt'),
+    requestUtils.wrap(async function(req, res, next) {
       // Delete the current user and respond with no content
       await User.deleteOne({_id: req.authUser._id});
       return res.status(204).end();

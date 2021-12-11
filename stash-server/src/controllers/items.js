@@ -3,7 +3,7 @@ const httpError = require('http-errors');
 const passport = require('passport');
 const validate = require('validate.js');
 
-const wrapErrors = require('../utils/wrapErrors');
+const requestUtils = require('../utils/requestUtils');
 
 const Item = require('../models/item');
 const User = require('../models/user');
@@ -32,8 +32,8 @@ module.exports = function(app) {
 
   // Create the routes
   router.post('/',
-    passport.authenticate('jwt', {session: false, assignProperty: 'authUser'}),
-    wrapErrors(async function(req, res, next) {
+    requestUtils.authenticate('jwt'),
+    requestUtils.wrap(async function(req, res, next) {
       // Validate the data
       const validator = {
         title: {presence: true, type: 'string', length: {maximum: 64}},
@@ -69,21 +69,21 @@ module.exports = function(app) {
     }));
 
   router.get('/',
-    wrapErrors(async function(req, res, next) {
+    requestUtils.wrap(async function(req, res, next) {
       // Get the items from the database and respond with the items
       const items = await Item.find();
       return res.json(items);
     }));
 
   router.get('/:id',
-    wrapErrors(async function(req, res, next) {
+    requestUtils.wrap(async function(req, res, next) {
       // Respond with the item
       return res.json(req.item);
     }));
 
   router.patch('/:id',
-    passport.authenticate('jwt', {session: false, assignProperty: 'authUser'}),
-    wrapErrors(async function(req, res, next) {
+    requestUtils.authenticate('jwt'),
+    requestUtils.wrap(async function(req, res, next) {
       // Validate the data
       const validator = {
         title: {type: 'string', length: {maximum: 64}},
@@ -124,8 +124,8 @@ module.exports = function(app) {
     }));
 
   router.delete('/:id',
-    passport.authenticate('jwt', {session: false, assignProperty: 'authUser'}),
-    wrapErrors(async function(req, res, next) {
+    requestUtils.authenticate('jwt'),
+    requestUtils.wrap(async function(req, res, next) {
       // Delete the item and respond with no content
       await Item.deleteOne({_id: req.item._id});
       return res.status(204).end();

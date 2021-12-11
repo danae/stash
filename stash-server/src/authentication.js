@@ -10,21 +10,27 @@ module.exports.basicStrategy = function(app) {
     try {
       // Get the user from the database
       const user = await User.findOne({email: email});
-      if (user == null)
-        return done(null, false, {message: 'Incorrect username'});
+      if (user == null) {
+        app.locals.logger.verbose(`Basic authentication failed: Incorrect user`);
+        return done(null, false);
+      }
 
       // Check if the password of the user matches
       const passwordMatches = await user.comparePassword(password);
-      if (!passwordMatches)
-        return done(null, false, {message: 'Incorrect password'});
+      if (!passwordMatches) {
+        app.locals.logger.verbose(`Basic authentication failed: Incorrect password for user "${user._id}"`);
+        return done(null, false);
+      }
 
       // Return the authenticated user
+      app.locals.logger.verbose(`Basic authentication succeeded for user "${user._id}"`)
       return done(null, user);
     } catch (err) {
       // Handle the error
+      app.locals.logger.error(err);
       return done(err, false);
     }
-  })
+  });
 };
 
 // Define the JWT authentication strategy
@@ -37,13 +43,17 @@ module.exports.jwtStrategy = function(app) {
     try {
       // Get the user from the database
       const user = await User.findOne({_id: jwt_payload.sub});
-      if (user == null)
-        return done(null, false, {message: 'Incorrect user'});
+      if (user == null) {
+        app.locals.logger.verbose(`JWT authentication failed: Incorrect user`);
+        return done(null, false);
+      }
 
       // Return the authenticated user
+      app.locals.logger.verbose(`JWT authentication succeeded for user "${user._id}"`)
       return done(null, user);
     } catch (err) {
       // Handle the error
+      app.locals.logger.error(err);
       return done(err, false);
     }
   });
