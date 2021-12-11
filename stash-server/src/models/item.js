@@ -31,7 +31,7 @@ itemSchema.options.toJSON = {
   },
 };
 
-// Visrual method to get or set the owner
+// Virtual method to get or set the owner
 itemSchema.virtual('owner')
   .get(function() {
     return this.ownerId !== null ? User.findOne({_id: this.ownerId}) : null;
