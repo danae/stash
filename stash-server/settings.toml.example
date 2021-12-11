@@ -1,0 +1,9 @@
+[mongodb]
+# The MongoDB connection URI
+uri = "<connection uri>"
+
+[server]
+# The port to make the server listen to, defaults to 8080
+port = 80
+# The authentication secret to use for signing JWTs
+authSecret = "<secret>"
