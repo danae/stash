@@ -37,7 +37,7 @@ module.exports = function(app) {
         password: {presence: true, type: 'string', length: {minimum: 8}},
         name: {presence: true, type: 'string', length: {maximum: 32}},
         title: {type: 'string', length: {maximum: 64}},
-        description: {type: 'string', length: {maximum: 512}},
+        description: {type: 'string'},
         avatarUrl: {type: 'string', url: true},
         hidden: {type: 'boolean'},
       };
@@ -93,7 +93,7 @@ module.exports = function(app) {
         password: {type: 'string', length: {minimum: 8}},
         name: {type: 'string', length: {maximum: 32}},
         title: {type: 'string', length: {maximum: 64}},
-        description: {type: 'string', length: {maximum: 512}},
+        description: {type: 'string'},
         avatarUrl: {type: 'string', url: true},
         hidden: {type: 'boolean'},
       };

@@ -37,7 +37,7 @@ module.exports = function(app) {
       // Validate the data
       const validator = {
         title: {presence: true, type: 'string', length: {maximum: 64}},
-        description: {type: 'string', length: {maximum: 512}},
+        description: {type: 'string'},
         linkUrl: {type: 'string', url: true},
         imageUrl: {type: 'string', url: {allowDataUrl: true}},
         category: {type: 'string'},
@@ -87,7 +87,7 @@ module.exports = function(app) {
       // Validate the data
       const validator = {
         title: {type: 'string', length: {maximum: 64}},
-        description: {type: 'string', length: {maximum: 512}},
+        description: {type: 'string'},
         linkUrl: {type: 'string', url: true},
         imageUrl: {type: 'string', url: {allowDataUrl: true}},
         category: {type: 'string'},
