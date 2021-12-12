@@ -25,7 +25,7 @@ const main = async function() {
     format: winston.format.combine(
       winston.format.errors({stack: true}),
       winston.format.timestamp({format: 'YYYY-MM-DD HH:mm:ss.SSS'}),
-      winston.format.cli({level: true, colors: {debug: 'gray', verbose: 'gray', http: 'gray', info: 'gray', warn: 'yellow', error: 'red'}}),
+      winston.format.cli({level: true, colors: {debug: 'gray', verbose: 'gray', http: 'cyan', info: 'green', warn: 'yellow', error: 'red'}}),
       winston.format.printf(info => `[${info.timestamp}] ${info.level} ${info.message}`)
     ),
     transports: [new winston.transports.Console()],
